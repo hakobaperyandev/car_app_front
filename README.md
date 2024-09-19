@@ -9,3 +9,12 @@ npm install
 ```sh
 npm run dev
 ```
+
+
+## Users
+
+admin@example.com
+password
+
+user@example.com
+password
