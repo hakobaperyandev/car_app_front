@@ -159,7 +159,7 @@ export default {
     },
     async fetchEngineTypes() {
       try {
-        const response = await axios.get(BASE_URL + '/api/engines-list', {
+        const response = await axios.get(BASE_URL + '/api/engines', {
           headers: {
             Authorization: `Bearer ${this.token}`
           }
@@ -172,7 +172,7 @@ export default {
     },
     async fetchTransmissionTypes() {
       try {
-        const response = await axios.get(BASE_URL + '/api/transmissions-list', {
+        const response = await axios.get(BASE_URL + '/api/transmissions', {
           headers: {
             Authorization: `Bearer ${this.token}`
           }
@@ -189,7 +189,7 @@ export default {
             Authorization: `Bearer ${this.token}`
           }
         });
-        this.cars = response.data.data.data;
+        this.cars = response.data.data;
       } catch (error) {
         console.error('Error fetching cars:', error);
       }

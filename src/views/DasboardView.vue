@@ -154,10 +154,11 @@ export default {
             Authorization: `Bearer ${this.token}`
           }
         });
-        this.cars = response.data.data.data || [];
-        this.nextPageUrl = response.data.data.next_page_url;
-        this.prevPageUrl = response.data.data.prev_page_url;
-        this.paginationLinks = response.data.data.links;
+        
+        this.cars = response.data.data || [];
+        this.nextPageUrl = response.data.links.next;
+        this.prevPageUrl = response.data.links.prev;
+        this.paginationLinks = response.data.meta.links;
         this.filteredCars = [...this.cars];
       } catch (error) {
         console.error("Error fetching cars:", error);
@@ -177,7 +178,7 @@ export default {
     },
     async fetchEngineTypes() {
       try {
-        const response = await axios.get(BASE_URL + '/api/engines-list', {
+        const response = await axios.get(BASE_URL + '/api/engines', {
           headers: {
             Authorization: `Bearer ${this.token}`
           }
@@ -189,7 +190,7 @@ export default {
     },
     async fetchTransmissionTypes() {
       try {
-        const response = await axios.get(BASE_URL+'/api/transmissions-list', {
+        const response = await axios.get(BASE_URL+'/api/transmissions', {
           headers: {
             Authorization: `Bearer ${this.token}`
           }
@@ -225,27 +226,29 @@ export default {
     },
     async applyFilters() {
       try {
-          const response = await axios.post(BASE_URL+'/api/filter/cars', {
-            brand_id: this.filters.brand_id,
-            year_from: this.filters.year_from,
-            year_to: this.filters.year_to,
-            price_min: this.filters.price_min,
-            price_max: this.filters.price_max,
-            engine_id: this.filters.engine_id,
-            transmission_id: this.filters.transmission_id,
-            exterior_color: this.filters.exterior_color,
-            interior_color: this.filters.interior_color
-          }, {
-          headers: {
-            Authorization: `Bearer ${this.token}`
-          }
-        });
-          
-          this.cars = response.data.data.data || [];
-          this.nextPageUrl = response.data.data.next_page_url;
-          this.prevPageUrl = response.data.data.prev_page_url;
-          this.paginationLinks = response.data.data.links;
-          this.filteredCars = [...this.cars];
+        const response = await axios.get(BASE_URL + '/api/cars', {
+            params: {
+              brand_id: this.filters.brand_id,
+              year_from: this.filters.year_from,
+              year_to: this.filters.year_to,
+              price_min: this.filters.price_min,
+              price_max: this.filters.price_max,
+              engine_id: this.filters.engine_id,
+              transmission_id: this.filters.transmission_id,
+              exterior_color: this.filters.exterior_color,
+              interior_color: this.filters.interior_color
+            },
+            headers: {
+              Authorization: `Bearer ${this.token}`
+            }
+          });
+        
+        this.cars = response.data.data || [];
+        this.nextPageUrl = response.data.links.next;
+        this.prevPageUrl = response.data.links.prev;
+        this.paginationLinks = response.data.meta.links;
+        this.filteredCars = [...this.cars];
+
         } catch (error) {
           console.error("Error fetching cars:", error);
         }
@@ -303,6 +306,7 @@ export default {
   },
   
   created(){
+   
     this.checkLoggedInUser();
     this.fetchCars();
     this.fetchBrands();
